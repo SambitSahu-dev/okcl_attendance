@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Edit attendance</title>
+  <link rel="stylesheet" href="/static/app.css?v=20261125-2">
+</head>
+<body>
+  {% include "admin_nav.html" %}
+  <main class="page">
+    <p class="eyebrow">Admin correction</p><h1>Edit attendance #{{ record.id }}</h1>
+    {% if locked %}<p class="notice">{% if can_edit_locked %}This month is locked. Your HR/Super Admin role is allowed to correct it; the reason and audit trail are still mandatory.{% else %}This month is locked. Only HR or Super Admin may edit it.{% endif %}</p>{% endif %}
+    <section class="panel">
+      <form id="attendance-edit-form" data-record-id="{{ record.id }}" class="form-grid">
+        <label>Employee<select name="employee_id" required>
+          {% for employee in employees %}<option value="{{ employee.id }}" {% if employee.id == record.employee_id %}selected{% endif %}>{{ employee.employee_code }} — {{ employee.full_name }}</option>{% endfor %}
+        </select></label>
+        <label>Attendance date<input name="date" type="date" value="{{ record.date.isoformat() }}" required></label>
+        <label>First login (UTC)<input name="first_login_at" type="datetime-local" step="1" value="{{ record.first_login_at.strftime('%Y-%m-%dT%H:%M:%S') if record.first_login_at else '' }}"></label>
+        <label>Final logout (UTC)<input name="final_logout_at" type="datetime-local" step="1" value="{{ record.final_logout_at.strftime('%Y-%m-%dT%H:%M:%S') if record.final_logout_at else '' }}"></label>
+        <label>Status<select name="status" required>{% for status in statuses %}<option value="{{ status }}" {% if status == record.status %}selected{% endif %}>{{ status }}</option>{% endfor %}</select></label>
+        <label class="span-all">Reason (required)<textarea name="reason" minlength="1" maxlength="1000" required></textarea></label>
+        <button type="submit" {% if locked and not can_edit_locked %}disabled{% endif %}>Save audited correction</button>
+      </form>
+      <p id="status-message" class="status" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel panel-wide"><h2>Audit history</h2><div id="audit-history" class="audit-list">Loading…</div></section>
+  </main>
+  <script src="/static/attendance_edit.js" defer></script><script src="/static/auth.js" defer></script>
+</body>
+</html>

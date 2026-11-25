@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c33">
+  <title>Attendance today · ATB</title>
+  <link rel="stylesheet" href="/static/app.css?v=20261125-2">
+</head>
+<body class="app-body">
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="ATB home">
+      <span class="brand-mark" aria-hidden="true">A</span>
+      <span>ATB <small>ATTENDANCE INTELLIGENCE</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="/attendance">GATE</a>
+      {% if is_authenticated %}
+      <a href="/dashboard">My dashboard</a>
+      <a href="/auth/logout" data-logout>Sign out</a>
+      {% else %}
+      <a href="/login">Sign in</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main class="page dashboard-page public-home-page">
+    <section class="dashboard-hero public-home-hero">
+      <div class="hero-copy">
+        <span class="hero-badge"><span class="live-dot"></span> LIVE WORKPLACE OVERVIEW</span>
+        <p class="eyebrow">Daily attendance snapshot</p>
+        <h1>Attendance at a glance</h1>
+        <p class="hero-description">See today's office presence and attendance totals.</p>
+        {% if is_authenticated %}
+        <a class="hero-cta" href="/dashboard">Open your dashboard</a>
+        {% else %}
+        <a class="hero-cta" href="/login">Sign in to your workspace</a>
+        {% endif %}
+      </div>
+      <aside class="hero-date" aria-label="Current attendance date">
+        <span>Today (UTC)</span>
+        <strong id="today-day">{{ data.date.strftime("%d") }}</strong>
+        <div><b id="today-weekday">{{ data.date.strftime("%A") }}</b><span id="today-month">{{ data.date.strftime("%B %Y") }}</span></div>
+      </aside>
+      <span class="hero-orbit orbit-one" aria-hidden="true"></span>
+      <span class="hero-orbit orbit-two" aria-hidden="true"></span>
+    </section>
+
+    <div class="section-heading dashboard-section-heading">
+      <div><span class="eyebrow">Live overview</span><h2>Attendance today</h2></div>
+      <span class="refresh-note"><span class="live-dot"></span> Refreshes every 30 seconds</span>
+    </div>
+    <section class="tile-grid public-tile-grid" aria-label="Today's attendance summary">
+      <article class="tile tile-inside">
+        <div class="tile-top"><span class="tile-label">Inside office</span><span class="tile-symbol" aria-hidden="true">IN</span></div>
+        <strong id="inside-count">{{ data.inside_count }}</strong>
+        <small>Logged in · not yet logged out</small>
+      </article>
+      <article class="tile tile-outside">
+        <div class="tile-top"><span class="tile-label">Out of office</span><span class="tile-symbol" aria-hidden="true">OUT</span></div>
+        <strong id="outside-count">{{ data.outside_count }}</strong>
+        <small>Logged in and logged out</small>
+      </article>
+      <article class="tile tile-absent">
+        <div class="tile-top"><span class="tile-label">Absent</span><span class="tile-symbol" aria-hidden="true">—</span></div>
+        <strong id="absent-count">{{ data.absent_count }}</strong>
+        <small>No login on a working day</small>
+      </article>
+    </section>
+    <p id="public-dashboard-status" class="status" role="status" aria-live="polite"></p>
+  </main>
+  <script src="/static/public_dashboard.js?v=20261125" defer></script>
+  <script src="/static/auth.js" defer></script>
+</body>
+</html>

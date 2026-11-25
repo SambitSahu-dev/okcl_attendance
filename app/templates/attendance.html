@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c33">
+  <title>GATE · ATB</title>
+  <link rel="stylesheet" href="/static/app.css?v=20261125-5">
+</head>
+<body class="app-body gate-body">
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="ATB home">
+      <span class="brand-mark" aria-hidden="true">A</span>
+      <span>ATB <small>ATTENDANCE INTELLIGENCE</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/attendance" aria-current="page">GATE</a>
+      <a href="/login">Sign in</a>
+    </nav>
+  </header>
+  <main class="page gate-page">
+    <section id="gate-closed" class="dashboard-hero gate-hero">
+      <div class="hero-copy">
+        <span class="hero-badge"><span class="live-dot"></span> SECURE ATTENDANCE ACCESS</span>
+        <p class="eyebrow">Fixed workplace terminal</p>
+        <h1>GATE</h1>
+        <p class="hero-description">Open the live camera. GATE recognizes your face, blink, and hand gesture together to record attendance automatically.</p>
+      </div>
+      <button id="open-gate" class="gate-open-button" type="button" aria-controls="gate-workspace" aria-expanded="false">
+        <strong>GATE</strong>
+        <small>Open live camera</small>
+      </button>
+      <span class="hero-orbit orbit-one" aria-hidden="true"></span>
+      <span class="hero-orbit orbit-two" aria-hidden="true"></span>
+    </section>
+
+    <section id="gate-workspace" class="gate-workspace" aria-label="GATE live session" hidden>
+      <div class="gate-workspace-header">
+        <div>
+          <span id="gate-state" class="gate-state" data-state="starting"><span class="live-dot"></span><span id="gate-state-label">GATE OPENING</span></span>
+          <p>Camera stays active until you select CLOSE GATE.</p>
+        </div>
+        <button id="close-gate" class="gate-close-button" type="button">CLOSE GATE</button>
+      </div>
+
+      <section class="gate-camera-panel" aria-label="Live attendance camera">
+        <div class="gate-panel-heading">
+          <div><span class="eyebrow">LIVE CAMERA</span><h2>Automatic attendance scan</h2></div>
+          <span class="muted">Keep one face in view</span>
+        </div>
+        <div class="gate-scan-messages">
+          <p id="employee-greeting" class="gate-greeting" role="status" aria-live="polite" hidden></p>
+          <p id="prompt" class="status gate-prompt" role="status" aria-live="polite">Opening automatic attendance scan…</p>
+          <section id="result" class="result gate-result" hidden aria-live="polite"></section>
+        </div>
+        <div class="camera-frame gate-camera-frame">
+          <video id="camera" autoplay muted playsinline aria-label="Live camera view"></video>
+          <canvas id="capture" hidden></canvas>
+        </div>
+        <div class="gate-controls">
+          <button id="cancel" type="button" class="secondary" hidden>Cancel scan</button>
+        </div>
+      </section>
+
+      <aside class="gate-activity-panel" aria-label="Recent check-in and check-out activity">
+        <div class="gate-panel-heading">
+          <div><span class="eyebrow">LIVE ACTIVITY</span><h2>Recent attendance</h2></div>
+          <span class="activity-scope">This gate session</span>
+        </div>
+        <p id="activity-empty" class="gate-activity-empty">Verified check-ins and check-outs will appear here.</p>
+        <ol id="activity-list" class="gate-activity-list" aria-live="polite"></ol>
+      </aside>
+    </section>
+    <p id="gate-status" class="status gate-closed-status" role="status" aria-live="polite">GATE is closed. Select GATE to start the camera.</p>
+  </main>
+  <script src="/static/attendance.js?v=20261125-5" defer></script>
+  <script src="/static/auth.js" defer></script>
+</body>
+</html>

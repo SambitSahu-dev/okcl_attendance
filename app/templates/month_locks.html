@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Month locks</title>
+  <link rel="stylesheet" href="/static/app.css?v=20261125-2">
+</head>
+<body>
+  {% include "admin_nav.html" %}
+  <main class="page">
+    <p class="eyebrow">Super Admin</p><h1>Month locks</h1>
+    <section class="panel">
+      <form id="month-lock-form" class="form-grid">
+        <label>Year<input name="year" type="number" min="1900" max="9999" required></label>
+        <label>Month<input name="month" type="number" min="1" max="12" required></label>
+        <label>Action<select name="locked"><option value="true">Lock</option><option value="false">Unlock</option></select></label>
+        <button type="submit">Save month lock</button>
+      </form>
+      <p class="muted">Locked months remain editable only by Super Admin and HR. All corrections still require a reason and create an audit entry.</p>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel panel-wide"><div class="table-wrap"><table>
+      <thead><tr><th>Month</th><th>Status</th><th>Locked at</th><th>Updated by user</th></tr></thead>
+      <tbody id="month-lock-rows"><tr><td colspan="4">Loading…</td></tr></tbody>
+    </table></div></section>
+  </main>
+  <script src="/static/month_locks.js" defer></script><script src="/static/auth.js" defer></script>
+</body>
+</html>

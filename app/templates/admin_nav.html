@@ -1,0 +1,29 @@
+<header class="site-header">
+  <a class="brand" href="/" aria-label="ATB home">
+    <span class="brand-mark" aria-hidden="true">A</span>
+    <span>ATB <small>ATTENDANCE INTELLIGENCE</small></span>
+  </a>
+  <nav aria-label="Admin navigation">
+    <a href="/dashboard" {% if active_page == "dashboard" %}aria-current="page"{% endif %}>Overview</a>
+    <a href="/admin/attendance" {% if active_page == "attendance" %}aria-current="page"{% endif %}>Attendance</a>
+    {% if user.admin_role in ["standard", "super_admin", "hr"] %}
+    <a href="/admin/employees" {% if active_page == "employees" %}aria-current="page"{% endif %}>Manage Employees</a>
+    <a href="/admin/enrollment" {% if active_page == "enrollment" %}aria-current="page"{% endif %}>Enrollment</a>
+    {% endif %}
+    {% if user.admin_role in ["standard", "super_admin", "hr"] %}
+    <a href="/admin/holidays" {% if active_page == "holidays" %}aria-current="page"{% endif %}>Holidays</a>
+    {% endif %}
+    {% if user.admin_role in ["standard", "super_admin"] %}
+    <a href="/admin/settings" {% if active_page == "settings" %}aria-current="page"{% endif %}>Settings</a>
+    {% endif %}
+    {% if user.admin_role in ["standard", "super_admin", "accounts"] %}
+    <a href="/admin/reports" {% if active_page == "reports" %}aria-current="page"{% endif %}>Reports</a>
+    {% endif %}
+    {% if user.admin_role == "super_admin" %}
+    <a href="/admin/month-locks" {% if active_page == "month_locks" %}aria-current="page"{% endif %}>Month locks</a>
+    <a href="/admin/users" {% if active_page == "users" %}aria-current="page"{% endif %}>Manage Admin Login</a>
+    {% endif %}
+    <a href="/admin/profile" {% if active_page == "profile" %}aria-current="page"{% endif %}>Edit profile</a>
+    <a href="/auth/logout" data-logout>Sign out</a>
+  </nav>
+</header>

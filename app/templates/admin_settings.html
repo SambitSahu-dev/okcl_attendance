@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Attendance settings</title>
+  <link rel="stylesheet" href="/static/app.css?v=20261125-2">
+</head>
+<body>
+  {% include "admin_nav.html" %}
+  <main class="page">
+    <div class="page-heading">
+      <div><p class="eyebrow">Admin settings</p><h1>Late-arrival cutoff</h1></div>
+    </div>
+    <section class="panel panel-narrow">
+      <form id="late-cutoff-form">
+        <label for="late-cutoff">Late cutoff for completed attendance days (UTC)</label>
+        <input id="late-cutoff" name="late_cutoff" type="time" step="60">
+        <p class="muted">A completed day with a first login after this time is marked Late. Days without a logout remain Incomplete. Leave blank to disable late marking.</p>
+        <button type="submit">Save cutoff</button>
+      </form>
+      <p id="settings-status" class="status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <script src="/static/admin_settings.js" defer></script>
+  <script src="/static/auth.js" defer></script>
+</body>
+</html>

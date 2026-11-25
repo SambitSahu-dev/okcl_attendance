@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Attendance records</title>
+  <link rel="stylesheet" href="/static/app.css?v=20261125-2">
+</head>
+<body data-admin-role="{{ admin_role }}">
+  {% include "admin_nav.html" %}
+  <main class="page">
+    <div class="page-heading"><div><p class="eyebrow">Admin</p><h1>Attendance records</h1></div>
+      <label class="inline-field">Date <input id="attendance-day" type="date" value="{{ today }}"></label>
+    </div>
+    <section class="panel panel-wide">
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Employee</th><th>Code</th><th>Date</th><th>IN (UTC)</th><th>OUT (UTC)</th><th>Status</th><th>Edited</th><th></th></tr></thead>
+        <tbody id="attendance-rows"><tr><td colspan="8">Loading…</td></tr></tbody>
+      </table></div>
+    </section>
+  </main>
+  <script src="/static/admin_attendance.js" defer></script>
+  <script src="/static/auth.js" defer></script>
+</body>
+</html>

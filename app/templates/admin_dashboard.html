@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c33">
+  <title>Attendance overview · ATB</title>
+  <link rel="stylesheet" href="/static/app.css?v=20261125-2">
+</head>
+<body class="app-body" data-admin-role="{{ user.admin_role or 'standard' }}">
+  {% set active_page = "dashboard" %}
+  {% include "admin_nav.html" %}
+  <main class="page dashboard-page">
+    <section class="dashboard-hero">
+      <div class="hero-copy">
+        <span class="hero-badge"><span class="live-dot"></span> VISION-POWERED WORKSPACE</span>
+        <p class="eyebrow">Good to have you back</p>
+        <h1>{{ user.display_name or user.username }}</h1>
+        <p class="hero-description">A clear view of today’s attendance, team presence, and the tools available to you.</p>
+        <span class="role-pill">{{ (user.admin_role or "standard")|replace("_", " ")|title }}</span>
+      </div>
+      <aside class="hero-date" aria-label="Current attendance date">
+        <span>Today (UTC)</span>
+        <strong>{{ data.date.strftime("%d") }}</strong>
+        <div><b>{{ data.date.strftime("%A") }}</b><span>{{ data.date.strftime("%B %Y") }}</span></div>
+      </aside>
+      <span class="hero-orbit orbit-one" aria-hidden="true"></span>
+      <span class="hero-orbit orbit-two" aria-hidden="true"></span>
+    </section>
+
+    <div class="section-heading dashboard-section-heading">
+      <div><span class="eyebrow">Live overview</span><h2>Attendance today</h2></div>
+      <span class="refresh-note"><span class="live-dot"></span> Refreshes every 30 seconds</span>
+    </div>
+    <section class="tile-grid" aria-label="Today's attendance summary">
+      <article class="tile tile-inside">
+        <div class="tile-top"><span class="tile-label">Inside office</span><span class="tile-symbol" aria-hidden="true">IN</span></div>
+        <strong id="inside-count">{{ data.inside_count }}</strong>
+        <small>Logged in · not yet logged out</small>
+      </article>
+      <article class="tile tile-outside">
+        <div class="tile-top"><span class="tile-label">Out of office</span><span class="tile-symbol" aria-hidden="true">OUT</span></div>
+        <strong id="outside-count">{{ data.outside_count }}</strong>
+        <small>Logged in and logged out</small>
+      </article>
+      <article class="tile tile-absent">
+        <div class="tile-top"><span class="tile-label">Absent</span><span class="tile-symbol" aria-hidden="true">—</span></div>
+        <strong id="absent-count">{{ data.absent_count }}</strong>
+        <small>No login on a working day</small>
+      </article>
+      <article class="tile tile-support">
+        <div class="tile-top"><span class="tile-label">Instant support</span><span class="tile-symbol" aria-hidden="true">24/7</span></div>
+        <strong>Administrator</strong>
+        <small>{{ data.admin_contact_email or "Contact your administrator" }}</small>
+      </article>
+    </section>
+
+    <section class="quick-actions-section">
+      <div class="section-heading"><div><span class="eyebrow">Your workspace</span><h2>Quick access</h2></div></div>
+      <div class="quick-grid">
+        <a class="action-card action-primary" href="/attendance"><span class="action-icon" aria-hidden="true">OPEN</span><span><strong>Open GATE</strong><small>Start a verified attendance scan</small></span></a>
+        <a class="action-card" href="/admin/attendance"><span class="action-icon" aria-hidden="true">LOG</span><span><strong>Attendance records</strong><small>Review today's IN and OUT activity</small></span></a>
+        {% if user.admin_role in ["standard", "super_admin", "hr"] %}
+        <a class="action-card" href="/admin/employees"><span class="action-icon" aria-hidden="true">ADD</span><span><strong>Add Employee</strong><small>Create a profile and set up face recognition</small></span></a>
+        <a class="action-card" href="/admin/enrollment"><span class="action-icon" aria-hidden="true">BIO</span><span><strong>Face enrollment</strong><small>Register with explicit employee consent</small></span></a>
+        {% endif %}
+        {% if user.admin_role == "super_admin" %}
+        <a class="action-card" href="/admin/users"><span class="action-icon" aria-hidden="true">ACL</span><span><strong>Manage Admin Login</strong><small>Add admins and assign team roles</small></span></a>
+        {% endif %}
+        {% if user.admin_role in ["standard", "super_admin", "hr"] %}
+        <a class="action-card" href="/admin/holidays"><span class="action-icon" aria-hidden="true">HOL</span><span><strong>Holiday calendar</strong><small>Manage office holidays</small></span></a>
+        {% endif %}
+        {% if user.admin_role in ["standard", "super_admin", "accounts"] %}
+        <a class="action-card" href="/admin/reports"><span class="action-icon" aria-hidden="true">XLS</span><span><strong>Reports</strong><small>Download monthly Excel reports</small></span></a>
+        {% endif %}
+        {% if user.admin_role in ["standard", "super_admin"] %}
+        <a class="action-card" href="/admin/settings"><span class="action-icon" aria-hidden="true">SET</span><span><strong>Attendance settings</strong><small>Configure cutoff and weekly offs</small></span></a>
+        {% endif %}
+        <a class="action-card" href="/admin/profile"><span class="action-icon" aria-hidden="true">ID</span><span><strong>Edit profile</strong><small>Update your admin account details</small></span></a>
+      </div>
+    </section>
+
+    <section class="panel panel-wide attendance-panel">
+      <div class="section-heading">
+        <div><span class="eyebrow">Live activity</span><h2>Same-day attendance</h2></div>
+        <a class="text-link" href="/admin/attendance">View all records <span aria-hidden="true">&gt;</span></a>
+      </div>
+      <p id="dashboard-status" class="status" role="status" aria-live="polite"></p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Employee</th><th>Employee ID</th><th>IN · UTC</th><th>OUT · UTC</th><th>Status</th><th>Edited</th><th></th></tr></thead>
+          <tbody id="same-day-rows">
+            {% for row in data.table_rows %}
+            <tr>
+              <td class="employee-cell">{{ row.full_name }}</td><td>{{ row.employee_code }}</td>
+              <td>{{ row.first_login_at.strftime("%H:%M") if row.first_login_at else "—" }}</td>
+              <td>{{ row.final_logout_at.strftime("%H:%M") if row.final_logout_at else "—" }}</td>
+              <td><span class="status-pill">{{ row.status }}</span></td>
+              <td>{{ "Yes" if row.manually_edited else "No" }}</td>
+              <td>{% if user.admin_role in ["standard", "super_admin", "hr"] %}<a class="table-action" href="/admin/attendance/{{ row.attendance_id }}/edit">Edit</a>{% endif %}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="empty">No attendance scans have been recorded today.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="/static/admin_dashboard.js" defer></script>
+  <script src="/static/auth.js" defer></script>
+</body>
+</html>

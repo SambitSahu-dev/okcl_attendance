@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Employee face enrollment</title>
+  <link rel="stylesheet" href="/static/app.css?v=20261125-2">
+</head>
+<body>
+  {% include "admin_nav.html" %}
+  <main class="panel">
+    <p class="eyebrow">Admin</p>
+    <h1>Face enrollment</h1>
+    <p class="muted">Capture 3 to 10 clear images. Captures are processed in memory and are not saved.</p>
+    <label for="employee">Employee</label>
+    <select id="employee">
+      <option value="">Select an employee</option>
+      {% for employee in employees %}
+      <option value="{{ employee.id }}">{{ employee.employee_code }} — {{ employee.full_name }}</option>
+      {% endfor %}
+    </select>
+    {% if not employees %}
+    <p class="notice">There are no active employees awaiting enrollment.</p>
+    {% endif %}
+    <div class="camera-frame">
+      <video id="camera" autoplay muted playsinline aria-label="Live camera view"></video>
+      <canvas id="capture" hidden></canvas>
+    </div>
+    <div class="button-row">
+      <button id="start-camera" type="button">Start camera</button>
+      <button id="capture-image" type="button" class="secondary" disabled>Capture image</button>
+    </div>
+    <p id="capture-count" class="muted">0 of 10 images captured; at least 3 are required.</p>
+    <div id="previews" class="previews" aria-label="Captured image previews"></div>
+    <label class="consent">
+      <input id="consent" type="checkbox">
+      I confirm that the employee has explicitly consented to face enrollment and encrypted face data storage.
+    </label>
+    <button id="enroll" type="button" disabled>Train the system</button>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </main>
+  <script src="/static/enrollment.js?v=20261125-3" defer></script>
+  <script src="/static/auth.js" defer></script>
+</body>
+</html>
